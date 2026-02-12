@@ -3,7 +3,7 @@ from .models import Pet
 
 from django.utils import timezone
 
-class PetWriterSerializer(serializers.ModelSerializer):
+class PetWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pet
         fields = ['name', 'species', 'breed', 'birth_date', 'rg_animal', 'tutor']
@@ -13,7 +13,7 @@ class PetWriterSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Birth date cannot be in the future.")
         return value
     
-class PetReaderSerializer(serializers.ModelSerializer):
+class PetReadSerializer(serializers.ModelSerializer):
     tutor = serializers.StringRelatedField()  # Exibe o nome do tutor em vez do ID
 
     class Meta:

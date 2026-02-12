@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'apps.pets',
     'apps.vaccines',
     'apps.vaccinations',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -76,8 +77,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 
 REST_FRAMEWORK = {
-        'DEFAULT_AUTHENTICATION_CLASSES': ( # Define a classe de autenticação padrão para a API, usando JWT
+        'DEFAULT_AUTHENTICATION_CLASSES': ( #
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication', # Permite autenticação via sessão para facilitar o desenvolvimento e testes com a interface de administração do Django
+        #remover o sessionAuthentication
     ),
     'DEFAULT_PERMISSION_CLASSES': ( # Define as permissões padrão para a API, exigindo autenticação para acessar os endpoints
         'rest_framework.permissions.IsAuthenticated',
@@ -86,10 +89,14 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.UserRateThrottle',
     ],
+    'DEFAULT_FILTER_BACKENDS': (
+    'django_filters.rest_framework.DjangoFilterBackend',
+    ),
     'DEFAULT_THROTTLE_RATES': { # Define as taxas de limite para usuários anônimos e autenticados
         'anon': '20/minute',
         'user': '100/minute',
     }
+    
 }
 
 

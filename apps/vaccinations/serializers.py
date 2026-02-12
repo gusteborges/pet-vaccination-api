@@ -4,18 +4,18 @@ from .models import Vaccination
 from apps.pets.models import Pet
 from apps.vaccines.models import Vaccine
 from apps.users.serializers import UserReadSerializer
-from apps.pets.serializers import PetReadSerializer
-from apps.vaccines.serializers import VaccineReadSerializer
+from apps.pets.serializers import PetReadSerializer  
+from apps.vaccines.serializers import VaccineReadSerializer 
 
 
 class VaccinationWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vaccination
-        fields = ['pet', 'vaccine', 'application_date', 'dose_number']
+        fields = ['pet', 'vaccine', 'application_date', 'dose_number'] 
 
-    def validate_application_date(self, value):
+    def validate_application_date(self, value): # Ajustado nome do método
         if value > timezone.now().date():
-            raise serializers.ValidationError("Date administered cannot be in the future.")
+            raise serializers.ValidationError("A data de aplicação não pode ser no futuro.")
         return value
     
     # Validando que dose_number seja pelo menos 1
@@ -59,20 +59,19 @@ class VaccinationWriteSerializer(serializers.ModelSerializer):
         request = self.context.get("request")
         user = request.user if request else None
 
+        # Ajuste para 'applied_by' conforme definido no seu modelo
         vaccination = Vaccination.objects.create(
-            applied_by=user,
+            applied_by=user, 
             **validated_data
         )
-
         return vaccination
     
 
 class VaccinationReadSerializer(serializers.ModelSerializer):
     pet = PetReadSerializer(read_only=True)
     vaccine = VaccineReadSerializer(read_only=True)
-    administered_by = UserReadSerializer(read_only=True)
 
     class Meta:
         model = Vaccination
-        fields = ['id', 'pet', 'vaccine', 'administered_by', 'date_administered', 'dose_number', 'created_at']
+        fields = ['id', 'pet', 'vaccine', 'applied_by', 'application_date', 'dose_number', 'created_at']
         read_only_fields = fields
