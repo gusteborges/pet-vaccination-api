@@ -1,13 +1,24 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 
-# Create your models here.
+
 class Vaccine(models.Model):
-    name = models.CharField(max_length=150, unique=True)
+    name = models.CharField(
+        max_length=150,
+        unique=True,
+        db_index=True
+    )
+
     description = models.TextField(blank=True)
-    required_doses = models.PositiveIntegerField() # 
-    is_active = models.BooleanField(default=True) 
-    total_doses_administered = models.PositiveIntegerField(default=0) 
+
+    required_doses = models.PositiveIntegerField(
+        validators=[MinValueValidator(1)]
+    )
+
+    is_active = models.BooleanField(default=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = "Vaccine"
@@ -16,3 +27,7 @@ class Vaccine(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def total_applications(self):
+        return self.vaccinations.count()

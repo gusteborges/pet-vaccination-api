@@ -74,18 +74,19 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
+
 REST_FRAMEWORK = {
-        'DEFAULT_AUTHENTICATION_CLASSES': (
+        'DEFAULT_AUTHENTICATION_CLASSES': ( # Define a classe de autenticação padrão para a API, usando JWT
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    'DEFAULT_PERMISSION_CLASSES': (
+    'DEFAULT_PERMISSION_CLASSES': ( # Define as permissões padrão para a API, exigindo autenticação para acessar os endpoints
         'rest_framework.permissions.IsAuthenticated',
     ),
-    'DEFAULT_THROTTLE_CLASSES': [
+    'DEFAULT_THROTTLE_CLASSES': [ # Adiciona classes de throttle para limitar o número de requisições
         'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.UserRateThrottle',
     ],
-    'DEFAULT_THROTTLE_RATES': {
+    'DEFAULT_THROTTLE_RATES': { # Define as taxas de limite para usuários anônimos e autenticados
         'anon': '20/minute',
         'user': '100/minute',
     }

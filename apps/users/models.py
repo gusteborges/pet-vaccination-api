@@ -3,13 +3,16 @@ from django.db import models
 
 
 class User(AbstractUser):
-    ROLE_CHOICES = (
-        ('admin', 'Admin'),
-        ('vet', 'Veterinarian'),
-        ('staff', 'Staff'),
+    class Role(models.TextChoices):
+        ADMIN = "admin", "Admin"
+        VET = "vet", "Veterinarian"
+        STAFF = "staff", "Staff"
+
+    role = models.CharField(
+        max_length=20,
+        choices=Role.choices,
+        default=Role.STAFF
     )
 
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='staff')
-
     def __str__(self):
-        return self.username
+        return f"{self.username} ({self.get_role_display()})"

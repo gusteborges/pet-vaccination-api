@@ -1,7 +1,6 @@
 from django.db import models
-from django.conf import settings
 
-# Create your models here.
+
 class Pet(models.Model):
 
     class Species(models.TextChoices):
@@ -10,12 +9,22 @@ class Pet(models.Model):
         OTHER = "other", "Other"
 
     name = models.CharField(max_length=150)
+
     species = models.CharField(
         max_length=20,
         choices=Species.choices
     )
-    breed = models.CharField(max_length=100, blank=True, null=True)
+
+    breed = models.CharField(max_length=100, blank=True)
+
     birth_date = models.DateField(blank=True, null=True)
+
+    rg_animal = models.CharField(
+        max_length=30,
+        unique=True,
+        blank=True,
+        null=True
+    )
 
     tutor = models.ForeignKey(
         "tutors.Tutor",
@@ -31,4 +40,4 @@ class Pet(models.Model):
         ordering = ["name"]
 
     def __str__(self):
-        return f"{self.name} ({self.species})"
+        return f"{self.name} ({self.get_species_display()})"
