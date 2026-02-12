@@ -3,6 +3,7 @@ from .models import Pet
 
 from django.utils import timezone
 
+# Serializers para o modelo Pet
 class PetWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pet
@@ -14,11 +15,11 @@ class PetWriteSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Birth date cannot be in the future.")
         return value
     
+# O PetReadSerializer inclui o campo 'id' e 'created_at' para leitura, mas não para escrita.
 class PetReadSerializer(serializers.ModelSerializer):
     tutor = serializers.StringRelatedField()
 
     class Meta:
         model = Pet
         fields = ['id', 'name', 'species', 'breed', 'birth_date', 'rg_animal', 'tutor', 'created_at']
-        # Corrigido de ready_only_fields para read_only_fields
         read_only_fields = ['id', 'created_at']

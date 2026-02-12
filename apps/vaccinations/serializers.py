@@ -11,10 +11,10 @@ from apps.vaccines.serializers import VaccineReadSerializer
 class VaccinationWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vaccination
-        # Alinhado com o models.py: application_date
+        # Alinhado com o models.py
         fields = ['pet', 'vaccine', 'application_date', 'dose_number']
 
-    def validate_application_date(self, value): # Corrigido nome do método
+    def validate_application_date(self, value):
         if value > timezone.now().date():
             raise serializers.ValidationError("A data de aplicação não pode ser no futuro.")
         return value
@@ -59,18 +59,15 @@ class VaccinationWriteSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request = self.context.get("request")
         user = request.user if request else None
-        # Alinhado com o models.py: applied_by
         return Vaccination.objects.create(applied_by=user, **validated_data)
         
 
 class VaccinationReadSerializer(serializers.ModelSerializer):
     pet = PetReadSerializer(read_only=True)
     vaccine = VaccineReadSerializer(read_only=True)
-    # Alinhado com o models.py: applied_by
     applied_by = UserReadSerializer(read_only=True)
 
     class Meta:
         model = Vaccination
-        # Campos atualizados conforme o models.py
         fields = ['id', 'pet', 'vaccine', 'applied_by', 'application_date', 'dose_number', 'created_at']
         read_only_fields = fields
