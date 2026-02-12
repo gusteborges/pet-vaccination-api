@@ -11,7 +11,7 @@ from apps.vaccines.serializers import VaccineReadSerializer
 class VaccinationWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vaccination
-        fields = ['pet', 'vaccine', 'date_administered', 'dose_number']
+        fields = ['pet', 'vaccine', 'application_date', 'dose_number']
 
     def validate_date_administered(self, value):
         if value > timezone.now().date():
@@ -60,7 +60,7 @@ class VaccinationWriteSerializer(serializers.ModelSerializer):
         user = request.user if request else None
 
         vaccination = Vaccination.objects.create(
-            administered_by=user,
+            applied_by=user,
             **validated_data
         )
 

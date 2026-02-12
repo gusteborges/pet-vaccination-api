@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, get_user_model
+from django.contrib.auth import get_user_model
 
 User = get_user_model()  # Importando o modelo User do Django
 

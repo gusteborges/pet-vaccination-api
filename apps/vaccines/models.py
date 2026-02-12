@@ -29,5 +29,5 @@ class Vaccine(models.Model):
         return self.name
 
     @property
-    def total_applications(self):
+    def total_doses_administered(self):
         return self.vaccinations.count()

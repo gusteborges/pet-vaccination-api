@@ -17,9 +17,9 @@ class VaccineWriterSerializer(serializers.ModelSerializer):
     
 
 class VaccineReaderSerializer(serializers.ModelSerializer):
-    total_doses_administered = serializers.ReadOnlyField()
+    total_applications  = serializers.ReadOnlyField()
 
     class Meta:
         model = Vaccine
-        fields = ['id', 'name', 'description', 'required_doses', 'is_active', 'created_at', 'updated_at', 'total_doses_administered']
-        read_only_fields = ['id', 'created_at', 'updated_at', 'total_doses_administered']
+        fields = ['id', 'name', 'description', 'required_doses', 'is_active', 'created_at', 'updated_at', 'total_applications']
+        read_only_fields = ['id', 'created_at', 'updated_at', 'total_applications']
