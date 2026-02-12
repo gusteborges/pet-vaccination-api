@@ -13,7 +13,7 @@ class VaccinationWriteSerializer(serializers.ModelSerializer):
         model = Vaccination
         fields = ['pet', 'vaccine', 'application_date', 'dose_number']
 
-    def validate_date_administered(self, value):
+    def validate_application_date(self, value):
         if value > timezone.now().date():
             raise serializers.ValidationError("Date administered cannot be in the future.")
         return value

@@ -8,11 +8,11 @@ class PetWriterSerializer(serializers.ModelSerializer):
         model = Pet
         fields = ['name', 'species', 'breed', 'birth_date', 'rg_animal', 'tutor']
 
-        def validate_birth_date(self, value):
-            if value and value > timezone.now().date():
-                raise serializers.ValidationError("Birth date cannot be in the future.")
-            return value
-        
+    def validate_birth_date(self, value):
+        if value and value > timezone.now().date():
+            raise serializers.ValidationError("Birth date cannot be in the future.")
+        return value
+    
 class PetReaderSerializer(serializers.ModelSerializer):
     tutor = serializers.StringRelatedField()  # Exibe o nome do tutor em vez do ID
 
