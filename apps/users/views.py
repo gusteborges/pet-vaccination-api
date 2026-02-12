@@ -4,7 +4,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from core.permissions import IsAdminRole as IsAdmin
 from .models import User
-from .serializers import UserWriteSerializer, UserWriteSerializer
+from .serializers import UserReadSerializer, UserWriteSerializer, UserWriteSerializer
 
 # ViewSet para o modelo User, com ações personalizadas e controle de permissões.
 class UserViewSet(viewsets.ModelViewSet):
@@ -14,7 +14,8 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action in ["create", "update", "partial_update"]:
             return UserWriteSerializer
-        return UserWriteSerializer
+        # Retorna o serializer de leitura para as demais ações (list, retrieve, me)
+        return UserReadSerializer
 
     def get_permissions(self):
         if self.action == "me":
@@ -25,5 +26,5 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=["get"])
     def me(self, request):
-        serializer = UserWriteSerializer(request.user)
+        serializer = UserReadSerializer(request.user)
         return Response(serializer.data)

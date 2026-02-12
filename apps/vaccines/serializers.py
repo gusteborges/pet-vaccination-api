@@ -17,7 +17,7 @@ class VaccineWriteSerializer(serializers.ModelSerializer):
     
 
 class VaccineReadSerializer(serializers.ModelSerializer):
-    total_doses_administered = serializers.ReadOnlyField(source='total_applications')
+    total_doses_administered = serializers.ReadOnlyField()
 
     class Meta:
         model = Vaccine

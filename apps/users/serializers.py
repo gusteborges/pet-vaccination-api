@@ -24,5 +24,6 @@ class UserWriteSerializer(serializers.ModelSerializer):
 class UserReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name','role', 'created_at']
+        # Substituído created_at por date_joined
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role', 'date_joined']
         read_only_fields = fields
