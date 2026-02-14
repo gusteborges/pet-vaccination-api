@@ -45,7 +45,7 @@ O projeto adota o padrão Package by Feature em conjunto com uma Service Layer, 
 
 Estrutura de Diretórios
 
-```mermaid
+```text
 apps/
 ├── pets/           # Gestão de Animais
 ├── tutors/         # Gestão de Responsáveis
