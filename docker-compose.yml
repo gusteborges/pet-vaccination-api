@@ -5,11 +5,13 @@ services:
     ports:
       - "6379:6379"
 
-  web:
+web:
     build: .
+    # O "|| true" evita que o container pare se o usuário já existir
     command: >
       sh -c "python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
+      python manage.py createsuperuser --noinput || true &&
+      python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
@@ -20,3 +22,6 @@ services:
       - redis
     environment:
       - REDIS_URL=redis://redis:6379/1
+      - DJANGO_SUPERUSER_USERNAME=${DJANGO_SUPERUSER_USERNAME}
+      - DJANGO_SUPERUSER_PASSWORD=${DJANGO_SUPERUSER_PASSWORD}
+      - DJANGO_SUPERUSER_EMAIL=${DJANGO_SUPERUSER_EMAIL}

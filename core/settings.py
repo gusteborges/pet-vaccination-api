@@ -84,6 +84,9 @@ WSGI_APPLICATION = 'core.wsgi.application'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ( #
     'rest_framework_simplejwt.authentication.JWTAuthentication',
+
+    # 'rest_framework.authentication.SessionAuthentication', # Permite autenticação via sessão para facilitar o desenvolvimento e testes com a interface de administração do Django
+
     ),
     'DEFAULT_PERMISSION_CLASSES': ( # Define as permissões padrão para a API, exigindo autenticação para acessar os endpoints
         'rest_framework.permissions.IsAuthenticated',
@@ -164,5 +167,3 @@ AUTH_USER_MODEL = 'users.User'
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
-
-
