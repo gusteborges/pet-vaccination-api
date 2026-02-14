@@ -10,43 +10,34 @@ Este projeto foi construído com foco em Clean Code, S.O.L.I.D. e Arquitetura Es
 
 Core
 
-Python 3.12 - Linguagem de programação de alto desempenho.
-
-Django 6.0.2 - Framework web principal.
-
-Django Rest Framework (DRF) - Toolkit para construção de APIs RESTful.
+* Python 3.12 - Linguagem de programação de alto desempenho.
+* Django 6.0.2 - Framework web principal.
+* Django Rest Framework (DRF) - Toolkit para construção de APIs RESTful.
 
 Banco de Dados & Persistência
 
-SQLite - Banco de dados relacional padrão (portabilidade).
-
-dj-database-url - Configuração dinâmica para suporte a PostgreSQL/MySQL.
-
-Django Migrations - Controle de versão e evolução do esquema de dados.
+* SQLite - Banco de dados relacional padrão (portabilidade).
+* dj-database-url - Configuração dinâmica para suporte a PostgreSQL/MySQL.
+* Django Migrations - Controle de versão e evolução do esquema de dados.
 
 Segurança & Autenticação
-
-SimpleJWT - Autenticação baseada em tokens JWT.
-
-RBAC (Role-Based Access Control) - Permissões granulares para Admin, Veterinário e Staff.
+* SimpleJWT - Autenticação baseada em tokens JWT.
+* RBAC (Role-Based Access Control) - Permissões granulares para Admin, Veterinário e Staff.
 
 Performance & Resiliência
 
-Redis 7 - Cache distribuído e gerenciamento de estado.
-
-DRF Throttling - Implementação de Rate Limiting para proteção contra abuso.
+* Redis 7 - Cache distribuído e gerenciamento de estado.
+* DRF Throttling - Implementação de Rate Limiting para proteção contra abuso.
 
 Documentação & Monitoramento
 
-drf-spectacular - Documentação automática sob o padrão OpenAPI 3.0.
-
-Django Logging - Sistema de logging estruturado para rastreabilidade.
+* drf-spectacular - Documentação automática sob o padrão OpenAPI 3.0.
+* Django Logging - Sistema de logging estruturado para rastreabilidade.
 
 Infraestrutura
 
-Docker & Docker Compose - Containerização completa do ambiente.
-
-python-decouple - Gestão segura de variáveis de ambiente (.env).
+* Docker & Docker Compose - Containerização completa do ambiente.
+* python-decouple - Gestão segura de variáveis de ambiente (.env).
 
 🏗️ Arquitetura e Padrões de Design
 
@@ -69,11 +60,9 @@ apps/
 
 Princípios de Engenharia Aplicados
 
-Single Responsibility Principle (SRP): Toda a lógica complexa de validação de doses foi extraída dos Serializers para a camada de Services.
-
-DRY (Don't Repeat Yourself): Normalização de dados (CPF, Email) centralizada.
-
-RESTful Maturity: Uso correto de métodos HTTP e códigos de status semânticos (201 Created, 204 No Content, 405 Method Not Allowed).
+* Single Responsibility Principle (SRP): Toda a lógica complexa de validação de doses foi extraída dos Serializers para a camada de Services.
+* DRY (Don't Repeat Yourself): Normalização de dados (CPF, Email) centralizada.
+* RESTful Maturity: Uso correto de métodos HTTP e códigos de status semânticos (201 Created, 204 No Content, 405 Method Not Allowed).
 ___
 
 Diagrama de Entidade e Relacionamento (Mermaid)
@@ -121,11 +110,9 @@ erDiagram
 ```
 Destaques da Modelagem
 
-Entidade Vaccination: Atua como uma entidade de domínio rica, vinculando o Pet ao Imunizante e ao Veterinário responsável.
-
-Integridade de Doses: Validação lógica que impede o registro de doses fora de sequência (ex: Dose 2 antes da Dose 1).
-
-Consistência Cronológica: Bloqueio de registros com datas de aplicação inconsistentes em relação ao histórico do animal.
+* Entidade Vaccination: Atua como uma entidade de domínio rica, vinculando o Pet ao Imunizante e ao Veterinário responsável.
+* Integridade de Doses: Validação lógica que impede o registro de doses fora de sequência (ex: Dose 2 antes da Dose 1).
+* Consistência Cronológica: Bloqueio de registros com datas de aplicação inconsistentes em relação ao histórico do animal.
 
 📦 Funcionalidades Principais
 
@@ -140,11 +127,9 @@ Consistência Cronológica: Bloqueio de registros com datas de aplicação incon
 
 Após iniciar os containers, as seguintes interfaces estarão disponíveis:
 
-Swagger UI (OpenAPI 3): http://localhost:8000/api/docs/
-
-API Base: http://localhost:8000/api/
-
-Django Admin: http://localhost:8000/admin/
+* Swagger UI (OpenAPI 3): http://localhost:8000/api/docs/
+* API Base: http://localhost:8000/api/
+* Django Admin: http://localhost:8000/admin/
 
 🚀 Quick Start (Execução via Docker)
 
@@ -155,7 +140,6 @@ Siga os passos abaixo para rodar o projeto localmente:
 git clone [https://github.com/gusteborges/pet-vaccination-api.git](https://github.com/gusteborges/pet-vaccination-api.git)
 cd pet-vaccination-api
 cp .env.example .env
-
 
 (Certifique-se de configurar a SECRET_KEY no .env conforme as instruções do arquivo).
 
@@ -177,8 +161,7 @@ docker-compose exec web python manage.py test
 
 Augusto Machado Borges
 
-Responsável Técnico: @gusteborges
-
-LinkedIn: Augusto Borges
+* Responsável Técnico: @gusteborges
+* LinkedIn: [Augusto Borges](https://www.linkedin.com/in/augusto-machado-borges/)
 
 Projeto desenvolvido para o desafio técnico IVORE - 2026.
