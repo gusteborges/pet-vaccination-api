@@ -145,7 +145,7 @@ cp .env.example .env
 
 2. Build e Inicialização
 
-docker-compose up --build
+docker compose up --build
 
 
 Este comando executa as migrações, configura o Redis e sobe a aplicação na porta 8000.
