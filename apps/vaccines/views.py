@@ -4,9 +4,7 @@ from .models import Vaccine
 from .serializers import VaccineReadSerializer, VaccineWriteSerializer
 
 class VaccineViewSet(viewsets.ModelViewSet):
-    """
-    ViewSet para gerenciamento do catálogo de vacinas.
-    """
+    # ViewSet para gerenciamento do catálogo de vacinas.
     queryset = Vaccine.objects.all()
     permission_classes = [IsAuthenticated]
 

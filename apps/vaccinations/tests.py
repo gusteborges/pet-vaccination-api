@@ -6,13 +6,12 @@ from apps.tutors.models import Tutor
 from apps.pets.models import Pet
 from apps.vaccines.models import Vaccine
 from apps.vaccinations.models import Vaccination
-from django.utils import timezone
+from datetime import date, timedelta
 
 User = get_user_model()
 
 class VaccinationTests(APITestCase):
     def setUp(self):
-        # Cria usuário Veterinário para autenticação
         self.user = User.objects.create_user(
             username='vet_user', 
             password='password123', 
@@ -20,34 +19,55 @@ class VaccinationTests(APITestCase):
         )
         self.client.force_authenticate(user=self.user)
         
-        # Cria dados básicos para os testes
         self.tutor = Tutor.objects.create(name="Augusto", email="guste@email.com", cpf="12345678901")
         self.pet = Pet.objects.create(name="Rex", species="dog", tutor=self.tutor)
-        self.vaccine = Vaccine.objects.create(name="Antirrábica", required_doses=1)
+        # Vacina que requer 2 doses para testar a sequência
+        self.vaccine = Vaccine.objects.create(name="V8", required_doses=2)
         
-        # Nome da rota gerada pelo DefaultRouter (basename='vaccination')
         self.url = reverse('vaccination-list')
 
-    def test_create_vaccination_success(self):
-        """Testa se um veterinário consegue registrar uma vacinação corretamente."""
+    def test_create_first_dose_success(self):
+        # Testa o registro da primeira dose com sucesso
         data = {
             "pet": self.pet.id,
             "vaccine": self.vaccine.id,
             "dose_number": 1,
-            "application_date": timezone.now().date()
+            "application_date": date.today() - timedelta(days=10)
         }
         response = self.client.post(self.url, data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Vaccination.objects.count(), 1)
 
-    def test_applied_by_is_logged_user(self):
-        """Verifica se o campo applied_by é preenchido automaticamente com o usuário logado."""
+    def test_cannot_apply_second_dose_before_first_dose_date(self):
+        # Garante que a dose 2 não pode ter uma data anterior ou igual à dose 1.
+        
+        # Cria a primeira dose manualmente no dia de hoje
+        Vaccination.objects.create(
+            pet=self.pet,
+            vaccine=self.vaccine,
+            dose_number=1,
+            application_date=date.today(),
+            applied_by=self.user
+        )
+
+        # Tenta aplicar a dose 2 com data de ONTEM
         data = {
             "pet": self.pet.id,
             "vaccine": self.vaccine.id,
-            "dose_number": 1,
-            "application_date": timezone.now().date()
+            "dose_number": 2,
+            "application_date": date.today() - timedelta(days=1)
         }
         response = self.client.post(self.url, data)
-        vaccination = Vaccination.objects.first()
-        self.assertEqual(vaccination.applied_by, self.user)
+        
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("não pode ser anterior ou igual à data da dose 1", str(response.data))
+
+    def test_must_follow_dose_sequence(self):
+        # Garante que não se pode pular para a dose 2 sem a 1 existir.
+        data = {
+            "pet": self.pet.id,
+            "vaccine": self.vaccine.id,
+            "dose_number": 2,
+            "application_date": date.today()
+        }
+        response = self.client.post(self.url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)

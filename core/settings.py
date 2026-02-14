@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'apps.vaccines',
     'apps.vaccinations',
     'django_filters',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -101,8 +102,16 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': { # Define as taxas de limite para usuários anônimos e autenticados
         'anon': '20/minute',
         'user': '100/minute',
-    }
+    },
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema', # Configura o drf-spectacular para geração automática de documentação da API
     
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Pet Vaccination API',
+    'DESCRIPTION': 'Sistema de controle de vacinação de pets para clínicas veterinárias.',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 

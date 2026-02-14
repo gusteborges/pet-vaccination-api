@@ -1,19 +1,22 @@
 from rest_framework import serializers
 from .models import Vaccine
+from apps.vaccines.services import VaccineService
 
 class VaccineWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vaccine
         fields = ['name', 'description', 'required_doses', 'is_active']
 
-    # Validando que required_doses seja pelo menos 1
-    def validate_required_doses(self, value):
-        if value < 1:
-            raise serializers.ValidationError("Required doses must be at least 1.")
-        return value
-    
     def validate_name(self, value):
-        return value.strip()  # Remove espaços em branco extras
+        # Delega a limpeza para a service
+        return VaccineService.normalize_name(value)
+
+    def validate_required_doses(self, value):
+        # Delega a validação de regra de negócio para a service
+        try:
+            return VaccineService.validate_required_doses(value)
+        except Exception as e:
+            raise serializers.ValidationError(str(e))
     
 
 class VaccineReadSerializer(serializers.ModelSerializer):

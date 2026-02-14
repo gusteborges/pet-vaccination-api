@@ -1,58 +1,28 @@
 from rest_framework import serializers
-from django.utils import timezone
 from .models import Vaccination
-from apps.pets.models import Pet
-from apps.vaccines.models import Vaccine
 from apps.users.serializers import UserReadSerializer
 from apps.pets.serializers import PetReadSerializer  
 from apps.vaccines.serializers import VaccineReadSerializer 
+from .services import VaccinationService, ValidationError
 
 
 class VaccinationWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vaccination
-        # Alinhado com o models.py
         fields = ['pet', 'vaccine', 'application_date', 'dose_number']
 
-    def validate_application_date(self, value):
-        if value > timezone.now().date():
-            raise serializers.ValidationError("A data de aplicação não pode ser no futuro.")
-        return value
-    
-    # Validando que dose_number seja pelo menos 1
     def validate(self, data):
-        pet = data["pet"]
-        vaccine = data["vaccine"]
-        dose_number = data["dose_number"]
-
-        # Validando que dose_number não exceda o número de doses requeridas pela vacina
-        if dose_number > vaccine.required_doses:
-            raise serializers.ValidationError(
-                f"This vaccine requires only {vaccine.required_doses} doses."
+        # Valida a sequência da dose e a cronologia das datas usando a service
+        try:
+            VaccinationService.validate_dose_sequence(
+                data["pet"], 
+                data["vaccine"], 
+                data["dose_number"],
+                data["application_date"] # Novo parâmetro enviado para a service
             )
-
-        # Validando que a dose seja aplicada na ordem correta (dose 1, depois dose 2, etc.)
-        last_dose = (
-            Vaccination.objects
-            .filter(pet=pet, vaccine=vaccine)
-            .order_by("-dose_number")
-            .first()
-        )
-
-        # Se já existe uma dose anterior, a próxima dose deve ser a seguinte (dose_number + 1)
-        if last_dose:
-            expected_next_dose = last_dose.dose_number + 1
-
-            if dose_number != expected_next_dose:
-                raise serializers.ValidationError(
-                    f"Next dose must be {expected_next_dose}."
-                )
-        else: # Se não existe nenhuma dose anterior, a primeira dose deve ser 1
-            if dose_number != 1:
-                raise serializers.ValidationError(
-                    "First dose must be 1."
-                )
-
+        except ValidationError as e:
+            raise serializers.ValidationError(e.message)
+        
         return data
     
     #   Sobrescrevendo o método create para associar o usuário autenticado como o aplicador da vacina

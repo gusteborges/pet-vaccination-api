@@ -1,25 +1,22 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from apps.users.services import UserService
+
 
 User = get_user_model()  # Importando o modelo User do Django
 
 class UserWriteSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True,min_length=5)
+    password = serializers.CharField(write_only=True, min_length=5)
 
     class Meta:
         model = User
-        fields = ['username', 'password', 'email', 'first_name', 'last_name','role']
+        fields = ['username', 'password', 'email', 'first_name', 'last_name', 'role']
 
     def validate_email(self, value):
-        return value.lower()  # Convertendo o email para minúsculas para garantir a consistência
+        return UserService.normalize_email(value)
 
-    # O método create é sobrescrito para garantir que a senha seja armazenada de forma segura (hashing).
     def create(self, validated_data):
-        password = validated_data.pop('password')
-        user = User(**validated_data)
-        user.set_password(password)  # Hashing da senha
-        user.save()
-        return user
+        return UserService.create_user(validated_data)
     
 class UserReadSerializer(serializers.ModelSerializer):
     class Meta:

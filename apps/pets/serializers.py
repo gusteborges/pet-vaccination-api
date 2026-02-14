@@ -1,7 +1,6 @@
 from rest_framework import serializers
+from apps.pets.services import PetService
 from .models import Pet
-
-from django.utils import timezone
 
 # Serializers para o modelo Pet
 class PetWriteSerializer(serializers.ModelSerializer):
@@ -9,11 +8,11 @@ class PetWriteSerializer(serializers.ModelSerializer):
         model = Pet
         fields = ['name', 'species', 'breed', 'birth_date', 'rg_animal', 'tutor']
 
-    # Este método deve estar fora da classe Meta
     def validate_birth_date(self, value):
-        if value and value > timezone.now().date():
-            raise serializers.ValidationError("Birth date cannot be in the future.")
-        return value
+        try:
+            return PetService.validate_birth_date(value)
+        except Exception as e:
+            raise serializers.ValidationError(str(e))
     
 # O PetReadSerializer inclui o campo 'id' e 'created_at' para leitura, mas não para escrita.
 class PetReadSerializer(serializers.ModelSerializer):
