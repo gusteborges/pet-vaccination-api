@@ -5,13 +5,12 @@ services:
     ports:
       - "6379:6379"
 
-web:
+  web:
     build: .
-    # O "|| true" evita que o container pare se o usuário já existir
     command: >
       sh -c "python manage.py migrate &&
-      python manage.py createsuperuser --noinput || true &&
-      python manage.py runserver 0.0.0.0:8000"
+             python manage.py createsuperuser --noinput || true &&
+             python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
